@@ -5,8 +5,8 @@ var bluebird = require('bluebird');
 var cors = require('cors');
 var Dropbox = require('dropbox').Dropbox;
 
-var CLIENT_ID = process.env.CLIENT_ID.trim();
-var CLIENT_SECRET = process.env.CLIENT_SECRET.trim();
+var CLIENT_ID = process.env.CLIENT_ID;
+var CLIENT_SECRET = process.env.CLIENT_SECRET;
 var PORT = process.env.PORT;
 
 
