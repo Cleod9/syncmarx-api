@@ -20,19 +20,19 @@ var serve = function () {
 
   app.use(cors());
 
-  // JSON parsing support
-  app.use(bodyParser.json());
+  // URL encoded parsing support
+  app.use(bodyParser.urlencoded());
 
   // Auth post endpoint
   app.get('/auth', function (req, res) {
     // Require data param to be passed
-    if (!req.body.code) {
+    if (!req.params.code) {
       res.status(500).send('Missing field');
       return;
     }
 
     var dbx = new Dropbox({ clientId: CLIENT_ID, clientSecret: CLIENT_SECRET });
-    dbx.getAccessTokenFromCode(REDIRECT_URI, req.body.code)
+    dbx.getAccessTokenFromCode(REDIRECT_URI, req.params.code)
       .then(function (token) {
         res.status(200).send(token);
       })
