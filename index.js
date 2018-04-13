@@ -8,6 +8,7 @@ var Dropbox = require('dropbox').Dropbox;
 var CLIENT_ID = process.env.CLIENT_ID;
 var CLIENT_SECRET = process.env.CLIENT_SECRET;
 var PORT = process.env.PORT;
+var REDIRECT_URI = process.env.REDIRECT_URI;
 
 
 /**
@@ -23,7 +24,7 @@ var serve = function () {
   app.use(bodyParser.json());
 
   // Auth post endpoint
-  app.post('/auth', function (req, res) {
+  app.get('/auth', function (req, res) {
     // Require data param to be passed
     if (!req.body.code) {
       res.status(500).send('Missing field');
@@ -31,7 +32,7 @@ var serve = function () {
     }
 
     var dbx = new Dropbox({ clientId: CLIENT_ID, clientSecret: CLIENT_SECRET });
-    dbx.getAccessTokenFromCode(req.body.redirect_uri || null, req.body.code)
+    dbx.getAccessTokenFromCode(REDIRECT_URI, req.body.code)
       .then(function (token) {
         res.status(200).send(token);
       })
