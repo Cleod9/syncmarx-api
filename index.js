@@ -26,13 +26,13 @@ var serve = function () {
   // Auth post endpoint
   app.get('/auth', function (req, res) {
     // Require data param to be passed
-    if (!req.params.code) {
+    if (!req.query.code) {
       res.status(500).send('Missing field');
       return;
     }
 
     var dbx = new Dropbox({ clientId: CLIENT_ID, clientSecret: CLIENT_SECRET });
-    dbx.getAccessTokenFromCode(REDIRECT_URI, req.params.code)
+    dbx.getAccessTokenFromCode(REDIRECT_URI, req.query.code)
       .then(function (token) {
         res.status(200).send(token);
       })
