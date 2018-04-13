@@ -1,0 +1,27 @@
+{
+  "private": true,
+  "name": "syncmarx-api",
+  "version": "1.0.0",
+  "author": "Greg McLeod <cleod9@gmail.com>",
+  "description": "syncmarx API application",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "bluebird": "3.5.1",
+    "body-parser": "1.18.2",
+    "cors": "2.8.4",
+    "dropbox": "4.0.2",
+    "express": "4.16.1",
+    "isomorphic-fetch": "2.2.1",
+    "request": "2.83.0"
+  },
+  "devDependencies": {
+    "cross-env": "5.0.5"
+  },
+  "main": "./index",
+  "repository": {
+    "type": "git",
+    "url": "https://Cleod9@bitbucket.org/Cleod9/syncmarx-api.git"
+  }
+}
