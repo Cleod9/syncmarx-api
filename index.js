@@ -34,7 +34,7 @@ var serve = function () {
     var dbx = new Dropbox({ clientId: CLIENT_ID, clientSecret: CLIENT_SECRET });
     dbx.getAccessTokenFromCode(DROPBOX_REDIRECT_URI, req.query.code)
       .then(function (token) {
-        res.status(200).send('Copy and paste the following token into the syncmarx app:<br/><br/>' + token);
+        res.status(200).send('Copy and paste the following token into the syncmarx app/extension:<br/><br/>' + token);
       })
       .catch(function(error) {
         res.status(500).send('Unknown error');
