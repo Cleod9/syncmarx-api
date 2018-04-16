@@ -8,7 +8,7 @@ var Dropbox = require('dropbox').Dropbox;
 var CLIENT_ID = process.env.CLIENT_ID;
 var CLIENT_SECRET = process.env.CLIENT_SECRET;
 var PORT = process.env.PORT;
-var REDIRECT_URI = process.env.REDIRECT_URI;
+var DROPBOX_REDIRECT_URI = process.env.DROPBOX_REDIRECT_URI;
 
 
 /**
@@ -32,7 +32,7 @@ var serve = function () {
     }
 
     var dbx = new Dropbox({ clientId: CLIENT_ID, clientSecret: CLIENT_SECRET });
-    dbx.getAccessTokenFromCode(REDIRECT_URI, req.query.code)
+    dbx.getAccessTokenFromCode(DROPBOX_REDIRECT_URI, req.query.code)
       .then(function (token) {
         res.status(200).send('Copy and paste the following token into the syncmarx app:<br/><br/>' + token);
       })
