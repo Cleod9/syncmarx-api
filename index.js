@@ -24,7 +24,7 @@ var serve = function () {
   app.use(bodyParser.urlencoded());
 
   // Auth post endpoint
-  app.get('/auth', function (req, res) {
+  app.get('/auth/dropbox', function (req, res) {
     // Require data param to be passed
     if (!req.query.code) {
       res.status(500).send('Missing field');
