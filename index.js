@@ -23,6 +23,9 @@ var serve = function () {
   // URL encoded parsing support
   app.use(bodyParser.urlencoded());
 
+  // Static file support
+  app.use(express.static('public'));
+
   // Auth post endpoint
   app.get('/auth/dropbox', function (req, res) {
     // Require data param to be passed
@@ -41,6 +44,10 @@ var serve = function () {
         console.log(error, CLIENT_ID, CLIENT_SECRET);
       });
     
+  });
+
+  app.get('/', function (req, res) {
+    res.sendFile(__dirname + '/public/index.htm');
   });
   
   app.listen(PORT);
