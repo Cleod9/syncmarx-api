@@ -1,0 +1,11 @@
+apps:
+  - name: syncmarx-api
+    script: index.js
+    instances: 1
+    exec_mode: fork
+    watch: false
+    merge_logs: true
+    error_file: ./logs/syncmarx-api.log
+    env:
+      NODE_ENV: prod
+      
