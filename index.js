@@ -1,3 +1,4 @@
+var config = require('config');
 require('isomorphic-fetch');
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -5,11 +6,10 @@ var bluebird = require('bluebird');
 var cors = require('cors');
 var Dropbox = require('dropbox').Dropbox;
 
-var CLIENT_ID = process.env.CLIENT_ID;
-var CLIENT_SECRET = process.env.CLIENT_SECRET;
-var PORT = process.env.PORT;
-var DROPBOX_REDIRECT_URI = process.env.DROPBOX_REDIRECT_URI;
-
+var CLIENT_ID = config.CLIENT_ID;
+var CLIENT_SECRET = config.CLIENT_SECRET;
+var PORT = config.PORT;
+var DROPBOX_REDIRECT_URI = config.DROPBOX_REDIRECT_URI;
 
 /**
  * Serves the express app
