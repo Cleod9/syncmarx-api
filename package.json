@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "syncmarx-api",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Greg McLeod <cleod9@gmail.com>",
   "description": "syncmarx API application",
   "scripts": {
