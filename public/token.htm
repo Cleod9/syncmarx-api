@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
+    
+    <title>syncmarx - Token Authentication</title>
+  </head>
+  <body class="h-100">
+      <div class="container mt-4 mb-4">
+          <div class="card mx-auto text-center">
+            <div class="card-body">
+              <img src="/images/icon_96.png"/>
+              <h5 class="card-title">Your Access Token For Syncmarx Is Provided Below</h5>
+              <p class="card-text">Please copy and paste the following token into the Syncmarx app/extension:</p>
+              <div class="input-group">
+                  <input id="tokenText" class="form-control" type="text" value="{{TOKEN}}" />
+                  <span class="input-group-btn">
+                      <button id="copyButton" class="btn btn-primary" type="button">Copy</button>
+                  </span>
+               </div>
+            </div>
+          </div>
+      </div>
+      <script type="text/javascript">
+        (function () {
+          var token = document.getElementById('tokenText');
+          var button = document.getElementById('copyButton');
+
+          token.addEventListener('click', function () {
+            token.setSelectionRange(0, token.value.length);
+          });
+          copyButton.addEventListener('click', function () {
+            token.focus();
+            token.setSelectionRange(0, token.value.length);
+            var succeeded = false;
+            try {
+              succeeded = document.execCommand("copy");
+            } catch(e) {
+            }
+            if (!succeeded) {
+              alert('Error, your browser does not support the copy command. Please copy and paste manually.');
+            }
+          });
+        })();
+      </script>
+  </body>
+</html>
