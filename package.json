@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "syncmarx-api",
-  "version": "1.1.5",
+  "version": "1.2.0",
   "author": "Greg McLeod <cleod9@gmail.com>",
   "description": "syncmarx API application",
   "scripts": {
@@ -10,6 +10,7 @@
   "dependencies": {
     "bluebird": "3.5.1",
     "body-parser": "1.18.2",
+    "box-node-sdk": "1.28.0",
     "config": "1.21.0",
     "cors": "2.8.4",
     "dropbox": "4.0.2",
@@ -17,7 +18,7 @@
     "googleapis": "34.0.0",
     "isomorphic-fetch": "2.2.1",
     "js-yaml": "3.6.1",
-    "request": "2.83.0"
+    "request": "2.88.0"
   },
   "devDependencies": {
     "cross-env": "5.0.5"

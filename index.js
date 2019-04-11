@@ -9,6 +9,7 @@ var cors = require('cors');
 // Providers
 var Dropbox = require('dropbox').Dropbox;
 var google = require('googleapis').google;
+var BoxSDK = require('box-node-sdk');
 
 var settings = {
   dropbox: {
@@ -20,10 +21,13 @@ var settings = {
     CLIENT_ID: config.googledrive.CLIENT_ID,
     CLIENT_SECRET: config.googledrive.CLIENT_SECRET,
     REDIRECT_URI: config.googledrive.REDIRECT_URI
+  },
+  box: {
+    CLIENT_ID: config.box.CLIENT_ID,
+    CLIENT_SECRET: config.box.CLIENT_SECRET,
+    REDIRECT_URI: config.box.REDIRECT_URI
   }
 }
-var CLIENT_ID = config.CLIENT_ID;
-var CLIENT_SECRET = config.CLIENT_SECRET;
 var PORT = config.PORT;
 
 /**
@@ -84,7 +88,7 @@ var serve = function () {
     oauth2Client.getToken(req.query.code)
       .then(function (response) {
         var responseText = fs.readFileSync(__dirname + '/public/token.htm', { encoding: 'utf8' });
-        responseText = responseText.replace(/\{\{TOKEN\}\}/g, response.tokens.access_token + ':' + response.tokens.refresh_token)
+        responseText = responseText.replace(/\{\{TOKEN\}\}/g, response.tokens.access_token + ':' + response.tokens.refresh_token);
         res.status(200).send(responseText);
       })
       .catch(function(error) {
@@ -92,7 +96,8 @@ var serve = function () {
         console.log(error);
       });  
   });
-  
+
+  // Handles refreshing the Google API token
   app.post('/auth/googledrive/refreshtoken', function (req, res) {
     // Require data param to be passed
     if (!req.query.refresh_token) {
@@ -112,6 +117,78 @@ var serve = function () {
     oauth2Client.getAccessToken()
       .then(function (response) {
         res.json({ access_token: response.token });
+      })
+      .catch(function(error) {
+        res.status(500).send('Unknown error');
+        console.log(error);
+      });  
+  });
+
+  // Auth endpoint for Box
+  app.get('/auth/box', function (req, res) {
+    // Require data param to be passed
+    if (!req.query.code) {
+      res.status(500).send('Missing field');
+      return;
+    }
+
+    var sdk = new BoxSDK({
+      clientID: settings.box.CLIENT_ID,
+      clientSecret: settings.box.CLIENT_SECRET
+    });
+
+    sdk.tokenManager.getTokensAuthorizationCodeGrant(req.query.code)
+      .then(function (tokenInfo) {
+        console.log('Token info ', tokenInfo, '!');
+        var responseText = fs.readFileSync(__dirname + '/public/token.htm', { encoding: 'utf8' });
+        responseText = responseText.replace(/\{\{TOKEN\}\}/g, tokenInfo.accessToken + ':' + tokenInfo.refreshToken);
+        res.status(200).send(responseText);
+      })
+      .catch(function (err) {
+        console.log('Got an error!', err);
+        res.status(500).send('Unknown error');
+      }); 
+  });
+
+  // Handles refreshing the Box API token
+  app.post('/auth/box/refreshtoken', function (req, res) {
+    // Require data param to be passed
+    if (!req.query.refresh_token) {
+      res.status(500).send('Missing field');
+      return;
+    }
+
+    var sdk = new BoxSDK({
+      clientID: settings.box.CLIENT_ID,
+      clientSecret: settings.box.CLIENT_SECRET
+    });
+
+    sdk.tokenManager.getTokensRefreshGrant(req.query.refresh_token)
+      .then(function (tokenInfo) {
+        res.json({ access_token: tokenInfo.accessToken, refresh_token: tokenInfo.refreshToken });
+      })
+      .catch(function(error) {
+        res.status(500).send('Unknown error');
+        console.log(error);
+      });  
+  });
+
+  // Handles revoking the Box API token
+  app.post('/auth/box/revoke', function (req, res) {
+    // Require data param to be passed
+    if (!req.query.access_token) {
+      res.status(500).send('Missing field');
+      return;
+    }
+
+    var sdk = new BoxSDK({
+      clientID: settings.box.CLIENT_ID,
+      clientSecret: settings.box.CLIENT_SECRET
+    });
+
+    sdk.tokenManager.revokeTokens(req.query.access_token)
+      .then(function () {
+        res.json({ });
       })
       .catch(function(error) {
         res.status(500).send('Unknown error');
