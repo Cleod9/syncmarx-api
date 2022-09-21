@@ -1,13 +1,11 @@
 var fs = require('fs');
 var config = require('config');
-require('isomorphic-fetch');
 var express = require('express');
 var bodyParser = require('body-parser');
-var bluebird = require('bluebird');
 var cors = require('cors');
 
 // Providers
-var Dropbox = require('dropbox').Dropbox;
+var DropboxAuth = require('dropbox').DropboxAuth;
 var google = require('googleapis').google;
 var BoxSDK = require('box-node-sdk');
 
@@ -29,6 +27,9 @@ var settings = {
   }
 }
 var PORT = config.PORT;
+
+// Token page Template
+const TOKEN_TEMPLATE = fs.readFileSync(__dirname + '/public/token.htm', { encoding: 'utf8' });
 
 /**
  * Serves the express app
@@ -58,16 +59,34 @@ var serve = function () {
       return;
     }
 
-    var dbx = new Dropbox({ clientId: settings.dropbox.CLIENT_ID, clientSecret: settings.dropbox.CLIENT_SECRET });
+    var dbx = new DropboxAuth({ clientId: settings.dropbox.CLIENT_ID, clientSecret: settings.dropbox.CLIENT_SECRET });
     dbx.getAccessTokenFromCode(settings.dropbox.REDIRECT_URI, req.query.code)
       .then(function (token) {
-        var responseText = fs.readFileSync(__dirname + '/public/token.htm', { encoding: 'utf8' });
-        responseText = responseText.replace(/\{\{TOKEN\}\}/g, token)
+        var responseText = TOKEN_TEMPLATE.replace(/\{\{TOKEN\}\}/g, token.result.access_token + ':' + token.result.refresh_token);
         res.status(200).send(responseText);
       })
       .catch(function(error) {
         res.status(500).send('Unknown error');
-        console.log(error);
+        //console.error(error);
+      });  
+  });
+  
+  // Auth endpoint for dropbox
+  app.post('/auth/dropbox/refreshtoken', function (req, res) {
+    // Require data param to be passed
+    if (!req.query.refresh_token) {
+      res.status(500).send('Missing field');
+      return;
+    }
+
+    var dbx = new DropboxAuth({ clientId: settings.dropbox.CLIENT_ID, clientSecret: settings.dropbox.CLIENT_SECRET, refreshToken: req.query.refresh_token });
+    dbx.refreshAccessToken()
+      .then(function () {
+        res.json({ access_token: dbx.getAccessToken() });
+      })
+      .catch(function(error) {
+        res.status(500).send('Unknown error');
+        //console.error(error);
       });  
   });
 
@@ -87,13 +106,12 @@ var serve = function () {
 
     oauth2Client.getToken(req.query.code)
       .then(function (response) {
-        var responseText = fs.readFileSync(__dirname + '/public/token.htm', { encoding: 'utf8' });
-        responseText = responseText.replace(/\{\{TOKEN\}\}/g, response.tokens.access_token + ':' + response.tokens.refresh_token);
+        var responseText = TOKEN_TEMPLATE.replace(/\{\{TOKEN\}\}/g, response.tokens.access_token + ':' + response.tokens.refresh_token);
         res.status(200).send(responseText);
       })
       .catch(function(error) {
         res.status(500).send('Unknown error');
-        console.log(error);
+        //console.error(error);
       });  
   });
 
@@ -120,7 +138,7 @@ var serve = function () {
       })
       .catch(function(error) {
         res.status(500).send('Unknown error');
-        console.log(error);
+        //console.error(error);
       });  
   });
 
@@ -139,13 +157,12 @@ var serve = function () {
 
     sdk.tokenManager.getTokensAuthorizationCodeGrant(req.query.code)
       .then(function (tokenInfo) {
-        console.log('Token info ', tokenInfo, '!');
-        var responseText = fs.readFileSync(__dirname + '/public/token.htm', { encoding: 'utf8' });
-        responseText = responseText.replace(/\{\{TOKEN\}\}/g, tokenInfo.accessToken + ':' + tokenInfo.refreshToken);
+        //console.log('Token info ', tokenInfo, '!');
+        var responseText = TOKEN_TEMPLATE.replace(/\{\{TOKEN\}\}/g, tokenInfo.accessToken + ':' + tokenInfo.refreshToken);
         res.status(200).send(responseText);
       })
       .catch(function (err) {
-        console.log('Got an error!', err);
+        //console.error('Got an error!', err);
         res.status(500).send('Unknown error');
       }); 
   });
@@ -169,7 +186,7 @@ var serve = function () {
       })
       .catch(function(error) {
         res.status(500).send('Unknown error');
-        console.log(error);
+        //console.error(error);
       });  
   });
 
@@ -192,7 +209,7 @@ var serve = function () {
       })
       .catch(function(error) {
         res.status(500).send('Unknown error');
-        console.log(error);
+        //console.error(error);
       });  
   });
 

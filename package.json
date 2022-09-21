@@ -1,24 +1,21 @@
 {
   "private": true,
   "name": "syncmarx-api",
-  "version": "1.2.1",
-  "author": "Greg McLeod <cleod9@gmail.com>",
+  "version": "1.3.0",
+  "author": "Greg McLeod",
   "description": "syncmarx API application",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "bluebird": "3.5.1",
-    "body-parser": "1.18.2",
-    "box-node-sdk": "1.28.0",
-    "config": "1.21.0",
-    "cors": "2.8.4",
-    "dropbox": "4.0.2",
-    "express": "4.16.1",
-    "googleapis": "34.0.0",
-    "isomorphic-fetch": "2.2.1",
-    "js-yaml": "3.6.1",
-    "request": "2.88.0"
+    "body-parser": "1.20.0",
+    "box-node-sdk": "2.5.0",
+    "config": "3.3.8",
+    "cors": "2.8.5",
+    "dropbox": "10.32.0",
+    "express": "4.18.1",
+    "googleapis": "107.0.0",
+    "js-yaml": "4.1.0"
   },
   "devDependencies": {
     "cross-env": "5.0.5"
