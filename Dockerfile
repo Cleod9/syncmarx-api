@@ -15,6 +15,7 @@ RUN npm install
 # Now copy the app and static files
 COPY ./index.js ./
 COPY ./public/* ./public/
+COPY ./public/images/* ./public/images/
 
 # Expose app port and run
 EXPOSE 1800
