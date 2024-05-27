@@ -1,0 +1,15 @@
+version: '3'
+services:
+  syncmarx-api:
+    build: .
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        mode: "non-blocking"
+        max-buffer-size: "4m"
+    ports:
+      - "1800:1800"
+    env_file:
+      - .env

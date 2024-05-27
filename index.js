@@ -1,5 +1,5 @@
 var fs = require('fs');
-var config = require('config');
+require('dotenv').config();
 var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('cors');
@@ -11,22 +11,22 @@ var BoxSDK = require('box-node-sdk');
 
 var settings = {
   dropbox: {
-    CLIENT_ID: config.dropbox.CLIENT_ID,
-    CLIENT_SECRET: config.dropbox.CLIENT_SECRET,
-    REDIRECT_URI: config.dropbox.REDIRECT_URI
+    CLIENT_ID: process.env.DROPBOX_CLIENT_ID,
+    CLIENT_SECRET: process.env.DROPBOX_CLIENT_SECRET,
+    REDIRECT_URI: process.env.DROPBOX_REDIRECT_URI
   },
   googledrive: {
-    CLIENT_ID: config.googledrive.CLIENT_ID,
-    CLIENT_SECRET: config.googledrive.CLIENT_SECRET,
-    REDIRECT_URI: config.googledrive.REDIRECT_URI
+    CLIENT_ID: process.env.GOOGLEDRIVE_CLIENT_ID,
+    CLIENT_SECRET: process.env.GOOGLEDRIVE_CLIENT_SECRET,
+    REDIRECT_URI: process.env.GOOGLEDRIVE_REDIRECT_URI
   },
   box: {
-    CLIENT_ID: config.box.CLIENT_ID,
-    CLIENT_SECRET: config.box.CLIENT_SECRET,
-    REDIRECT_URI: config.box.REDIRECT_URI
+    CLIENT_ID: process.env.BOX_CLIENT_ID,
+    CLIENT_SECRET: process.env.BOX_CLIENT_SECRET,
+    REDIRECT_URI: process.env.BOX_REDIRECT_URI
   }
 }
-var PORT = config.PORT;
+var PORT = process.env.PORT;
 
 // Token page Template
 const TOKEN_TEMPLATE = fs.readFileSync(__dirname + '/public/token.htm', { encoding: 'utf8' });
